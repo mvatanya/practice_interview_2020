@@ -24,6 +24,20 @@
 
 const Queue = require('./queue');
 
-function weave(sourceOne, sourceTwo) {}
+// let sourceOne = new Queue();
+// let sourceTwo = new Queue();
+function weave(sourceOne, sourceTwo) {
+  let newArray = new Queue();
+  let max = Math.max(sourceOne.data.length, sourceTwo.data.length)
+  for (let i = max; i >= 0; i--){
+    if (sourceOne.data[i]){
+      newArray.add(sourceOne.data[i]);
+    }
+    if (sourceTwo.data[i]){
+      newArray.add(sourceTwo.data[i]);
+    }
+  }
+  return newArray;
+}
 
 module.exports = weave;
