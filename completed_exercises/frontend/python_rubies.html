@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Jquery is included here and available for use -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- some basic styles for game setup -->
+    <style>
+      td {
+        width: 60px;
+        height: 60px;
+        border: 1px solid;
+        text-align: center;
+      }
+
+      #python {
+        display: relative
+      }
+      .ruby {
+        background-image: url(ruby.png);
+        background-repeat: no-repeat;
+        background-size: 50px 40px;
+        background-position: 6px 14px;
+      }
+      #multi-row{
+        margin: 5px
+      }
+    </style>
+  </head>
+  <body>
+    <button id='start'>Start</button>
+    <div id='gameboard'></div>
+    <div id='multiplication'></div>
+
+  </body>
+</html>
+
+<script> 
+
+let rubyPosition;
+function setup(){
+  let gameboard = document.getElementById('gameboard')
+  const HEIGHT = 10;
+  const WIDTH = 10;
+  let board = document.createElement('table')
+  board.setAttribute('id', 'board')
+  let row
+  let column
+  let python = document.createElement('div')
+  python.setAttribute('id', python)
+  python.innerHTML = `<img src='python.png' height=45 width=45>`
+  for (let i = 0; i < HEIGHT; i++){
+    row = document.createElement('tr')
+    board.appendChild(row)
+    for (let j = 0; j < WIDTH; j++){
+
+      column = document.createElement('td')
+      column.setAttribute('id', `${i}${j}`)
+      if (i === 0 && j === 0){
+        column.appendChild(python)
+      }
+      row.appendChild(column)
+
+    }
+  }
+  gameboard.appendChild(board)
+  addRuby();
+
+}
+
+function addRuby(){
+  let random_i = Math.floor(Math.random() * 10); 
+  let random_j = Math.floor(Math.random() * 10); 
+  rubyPosition = `${random_i}${random_j}`
+  let ruby_tile = document.getElementById(`${random_i}${random_j}`)
+  ruby_tile.setAttribute('class','ruby')
+}
+
+let python_i= 0;
+let python_j=0
+let count = 0;
+function move(position){
+  count++
+  
+  let currentTile = document.getElementById(`${python_i}${python_j}`)
+  //remove python from current position
+  let python = currentTile.removeChild(currentTile.childNodes[0])
+  //add python to new position
+  let newTile
+  if (position === 'right'){
+    if (python_j < 9) python_j++;
+    newTile = document.getElementById(`${python_i}${python_j}`)
+    console.log('right')
+  }
+  if (position === 'left'){
+    if (python_j > 0) python_j--;
+    newTile = document.getElementById(`${python_i}${python_j}`)
+  }
+
+  if (position === 'up'){
+    if (python_i > 0) python_i--;
+    newTile = document.getElementById(`${python_i}${python_j}`)
+  }
+
+  if (position === 'down'){
+    if (python_i < 9) python_i++;
+    newTile = document.getElementById(`${python_i}${python_j}`)
+  }
+  
+  newTile.appendChild(python)
+ 
+  if (newTile.id === rubyPosition){
+    // document.keydown(false)
+    setTimeout(()=>{
+      alert(`it takes you ${count} to eat ruby`)
+      restart() 
+    }, 2000)
+    
+    
+  }
+}
+
+function restart(){
+  location.reload();
+}
+
+document.addEventListener('keydown', e => {
+    switch(e.key){
+    case 'ArrowLeft': move('left');
+      break;
+    case 'ArrowUp':move('up');
+      break;
+    case 'ArrowRight':move('right');
+      break;
+    case 'ArrowDown':move('down');
+      break;
+      default:break;
+  }
+  })
+
+let start = document.getElementById('start');
+start.onclick = () => {
+  setup()
+  start.disabled = true
+}
+
+</script>
+
+
+
+
+
+
+
