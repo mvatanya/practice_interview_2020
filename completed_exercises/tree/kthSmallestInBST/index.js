@@ -89,3 +89,31 @@ let t = {
 //[1,3,4,5,6]
 let k = 4;
 console.log(kthSmallestInBST(t, k)); //5
+
+
+//o(1) solution
+function kthSmallestInBST(t, k) {
+  var i = 0,
+      parent = {},
+      node = t;
+  while (true) {
+      if (node.left) { // enter left child
+          var next = node.left;
+          node.left = parent;
+          parent = node;
+          node = next;
+      } else { // visit leftmost node
+          if (++i === k) return node.value;
+          var rightChild = node.right;
+          node.right = parent;
+          if (rightChild) { // enter right child
+              parent = node;
+              node = rightChild;
+          } else { // backtrack to nearest unvisited parent
+              while (!node.left) node = node.right;
+              parent = node.left;
+              node.left = null;
+          }
+      }
+  }
+}
